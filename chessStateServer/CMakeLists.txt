@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
-project(chess-cpp-s)
+project(chessStateServer)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Collect all source and header files
 set(SOURCES
     main.cpp
     Server.cpp
@@ -39,26 +38,10 @@ set(HEADERS
     Rook.h
 )
 
-# Add executable including both source and header files
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+find_package(nlohmann_json REQUIRED)
+
 add_executable(CppServer ${SOURCES} ${HEADERS})
 
-# Specify Boost location if needed
-set(BOOST_ROOT "/opt/homebrew/Cellar/boost/1.86.0_2/")
-set(BOOST_INCLUDEDIR "/opt/homebrew/Cellar/boost/1.86.0_2/include")
-set(BOOST_LIBRARYDIR "/opt/homebrew/Cellar/boost/1.86.0_2/lib")
-
-# Find Boost libraries
-find_package(Boost 1.86 REQUIRED COMPONENTS filesystem system)
-
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-    link_directories(${Boost_LIBRARY_DIRS})
-else()
-    message(FATAL_ERROR "Boost not found!")
-endif()
-
-# Link Boost libraries
-target_link_libraries(CppServer Boost::filesystem Boost::system)
-
-find_package(nlohmann_json REQUIRED)
+target_link_libraries(CppServer boost::boost)
 target_link_libraries(CppServer nlohmann_json::nlohmann_json)
